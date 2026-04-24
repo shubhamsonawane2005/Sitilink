@@ -4,6 +4,7 @@ import SearchPage from "./Pages/SearchPage"
 import SelectCityPage from "./Pages/SelectCityPage"
 import SelectStopPage from "./Pages/SelectStopPage"
 import TicketSuccessPage from "./Pages/TicketSuccessPage"
+import ViewTicketPage from "./Pages/ViewTicketPage"
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       <Route path="/city-bus/cities" element={<SelectCityPage />} />
       <Route path="/city-bus/stops/:cityId" element={<SelectStopPage />} />
       <Route path="/ticket-success" element={<TicketSuccessPage />} />
+      <Route path="/view-ticket" element={<ViewTicketPage />} />
     </Routes>
   )
 }

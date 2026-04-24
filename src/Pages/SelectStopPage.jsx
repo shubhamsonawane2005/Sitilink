@@ -108,7 +108,7 @@ const SelectStopPage = () => {
         <div className="mt-4 relative z-10">
           <button
             onClick={() => navigate('/ticket-success', { 
-              state: { from: fromValue, to: toValue, adults, children, price: adults * 8 + children * 4 } 
+              state: { from: fromValue, to: toValue, adults, children, price: adults * 8 + children * 4, expiryTime: Date.now() + 7200000 } 
             })}
             disabled={!fromValue || !toValue}
             className={`w-full py-3 rounded-lg font-medium text-sm transition-colors ${fromValue && toValue ? 'bg-[#00baf2] text-white' : 'bg-gray-100 text-gray-400'}`}

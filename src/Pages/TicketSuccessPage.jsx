@@ -5,17 +5,25 @@ import { useLocation, useNavigate } from "react-router-dom";
 const TicketSuccessPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { from = "Gondal Ch...", to = "West Zon...", adults = 1, children = 0, price = 8 } = location.state || {};
+  const { from = "Gondal Ch...", to = "West Zon...", adults = 1, children = 0, price = 8, expiryTime: passedExpiryTime } = location.state || {};
 
-  // 1 hour countdown (3600 seconds)
-  const [timeLeft, setTimeLeft] = useState(3600);
+  const [expiryTime] = useState(() => passedExpiryTime || Date.now() + 7200000);
+
+  useEffect(() => {
+    if (!passedExpiryTime) {
+      navigate('.', { replace: true, state: { ...location.state, expiryTime } });
+    }
+  }, [passedExpiryTime, expiryTime, navigate, location.state]);
+
+  const calculateTimeLeft = () => Math.max(0, Math.floor((expiryTime - Date.now()) / 1000));
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+      setTimeLeft(calculateTimeLeft());
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [expiryTime]);
 
   const formatTime = (seconds) => {
     const h = Math.floor(seconds / 3600);
@@ -52,7 +60,7 @@ const TicketSuccessPage = () => {
       <div className="flex-1 px-6 pt-8 pb-24 flex flex-col items-center">
         {/* City Bus Logo Placeholder */}
         <div className="w-16 h-16 bg-white/50 rounded-full flex items-center justify-center mb-8 shadow-sm border border-white">
-          <span className="text-gray-400 text-xs font-semibold">BUS LOGO</span>
+          <span className="text-gray-400 text-xs font-semibold"><img src="/public/R.jpg" alt="" className="w-13" /></span>
         </div>
 
         {/* Route Details */}
@@ -97,7 +105,10 @@ const TicketSuccessPage = () => {
             </div>
           </div>
 
-          <button className="w-full bg-[#00baf2] text-white py-3.5 rounded-xl font-medium mt-6 hover:bg-[#00a3d4] transition-colors">
+          <button
+            onClick={() => navigate('/view-ticket', { state: { from, to, adults, children, expiryTime } })}
+            className="w-full bg-[#00baf2] text-white py-3.5 rounded-xl font-medium mt-6 hover:bg-[#00a3d4] transition-colors"
+          >
             View your Tickets
           </button>
         </div>
